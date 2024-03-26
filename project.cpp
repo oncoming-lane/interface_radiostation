@@ -34,7 +34,7 @@ int main() {
     for (int butt = 0; butt < 5; butt++)
         buttons_bottom.push_back(new ButtonRect(sf::Vector2f(300 + butt * 240, 500), sf::Vector2f(180, 60), "images/point.png", ""));
 
-    ButtonRect button_arrow_left( sf::Vector2f(1450, 250), sf::Vector2f(200, 70), "images/arrow.png", "");
+    ButtonRect button_arrow_left( sf::Vector2f(1450, 250), sf::Vector2f(200, 70), "images/arrow_.png", "");
     ButtonRect button_arrow_right(sf::Vector2f(1650, 250), sf::Vector2f(200, 70), "images/arrow.png", "");
     
     //ButtonRect button_arrow_left, button_arrow_right = *bottons_create();
