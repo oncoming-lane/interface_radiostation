@@ -28,7 +28,6 @@ public:
         window.draw(m_buttonText);
     }
 
-
 private:
     sf::RectangleShape m_rectangle;
     sf::Vector2f m_position;

@@ -27,9 +27,7 @@ int main() {
     Screen main_screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "Hello, world!");
 
 
-
-
-    int color_choice = 0;
+    int color_choice = 0; //по дефолту - белый
     std::vector <ButtonRect*> buttons_bottom;    
     for (int butt = 0; butt < 5; butt++)
         buttons_bottom.push_back(new ButtonRect(sf::Vector2f(300 + butt * 240, 500), sf::Vector2f(180, 60), "images/point.png", ""));

@@ -87,7 +87,3 @@ int transmit(std::string message1) {
     return 0;
 }
 
-//int main() {
-//    find_ttyUSB_port();
-//    transmit("\x05\x84\x02\x57\xB5");
-//}

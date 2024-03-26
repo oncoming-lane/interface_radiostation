@@ -85,7 +85,7 @@ int main() {
         return 1;
     }
 
-    usleep(100000);
+    usleep(100001);
 
     // Читаем данные из порта
     ssize_t bytes_read;
