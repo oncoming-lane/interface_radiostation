@@ -12,8 +12,6 @@
 
 char *find_ttyUSB_port();
 
-
-
 int transmit(std::string message1);
 
-void recieve();
+void receive();

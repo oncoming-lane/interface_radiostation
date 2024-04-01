@@ -14,13 +14,15 @@
 #define SERVER_PORT 1234 // Порт сервера
 
 //int transmit_eth(const char * message) {
-int transmit_eth(std::string message1) {
+int transmit_eth(std::string message1) 
+{
     const char * message = message1.c_str();
 
     int sockfd;
     struct sockaddr_in server_addr;
     // Создание сокета
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+    {
         perror("Socket creation error");
         exit(EXIT_FAILURE);
     }
@@ -28,13 +30,15 @@ int transmit_eth(std::string message1) {
     // Настройка структуры адреса сервера
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SERVER_PORT);
-    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) 
+    {
         perror("Invalid address/ Address not supported");
         exit(EXIT_FAILURE);
     }
 
     // Подключение к серверу
-    if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+    if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) 
+    {
         perror("Connection failed");
         exit(EXIT_FAILURE);
     }

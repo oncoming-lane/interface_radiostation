@@ -7,7 +7,8 @@
 class Screen{
 public:
     Screen(sf::Vector2f position, sf::Vector2f size, std::string texturePath, std::string text):
-         m_position(position), m_size(size), m_text(text) {
+         m_position(position), m_size(size), m_text(text) 
+    {
         
         m_texture.loadFromFile(texturePath);
         m_rectangle.setSize(size);
@@ -23,7 +24,13 @@ public:
                                   position.y + size.y / 3 - m_screenText.getLocalBounds().height / 3);
     }
 
-    void draw(sf::RenderWindow& window) {
+    void change_text(std::string text)
+    {
+
+    }
+
+    void draw(sf::RenderWindow& window) 
+    {
         window.draw(m_rectangle);
         window.draw(m_screenText);
     }

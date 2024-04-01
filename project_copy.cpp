@@ -77,18 +77,18 @@ int main() {
 
             if (event.type == sf::Event::MouseButtonPressed) 
             { //кнопка нажата - значит, будет отправка команды
-                //find_ttyUSB_port();
+                find_ttyUSB_port();
                 for (int butt = 0; butt < buttons_bottom.size(); butt++)
                 {
                     if (buttons_bottom[butt]->isMouseOver(window))
                     {
                         switch (butt) 
                         {
-                        case 0: { transmit_eth(commands["0"]); break; }
-                        case 1: { transmit_eth(commands["1"]); break; }
-                        case 2: { transmit_eth(commands["2"]); break; }
-                        case 3: { transmit_eth(commands["3"]); break; }
-                        case 4: { transmit_eth(commands["4"]); break; } 
+                        case 0: { transmit(commands["0"]); break; }
+                        case 1: { transmit(commands["1"]); break; }
+                        case 2: { transmit(commands["2"]); break; }
+                        case 3: { transmit(commands["3"]); break; }
+                        case 4: { transmit(commands["4"]); break; } 
                         }
                     }
                 }
@@ -97,12 +97,11 @@ int main() {
                 //в силу ненадобности настройки яркости на самой станции заменим ее на смену цвета интерфейса
                     //transmit(commands["light"]);
 
-                if (button_home.isMouseOver(window))        transmit_eth(commands["home"]);
-                if (button_power.isMouseOver(window))       transmit_eth(commands["power"]);
-                if (button_emergency.isMouseOver(window))   transmit_eth(commands["light"]);
-
-                if (button_arrow_left.isMouseOver(window))  transmit_eth(commands["left"]);
-                if (button_arrow_right.isMouseOver(window)) transmit_eth(commands["right"]);
+                if (button_home.isMouseOver(window))        transmit(commands["home"]);
+                if (button_power.isMouseOver(window))       transmit(commands["power"]);
+                if (button_emergency.isMouseOver(window))   transmit(commands["light"]);
+                if (button_arrow_left.isMouseOver(window))  transmit(commands["left"]);
+                if (button_arrow_right.isMouseOver(window)) transmit(commands["right"]);
                     
             button_home.change_color(window, color_choice%4);
             button_light.change_color(window, color_choice%4);
@@ -112,7 +111,7 @@ int main() {
             
 
             //main_screen.m_text("134");
-            
+            //receive();
                 
             }
 
@@ -136,7 +135,7 @@ int main() {
 
         main_screen.draw(window);
         
-        //receive();
+        //recieve();
 
         window.display();
 
