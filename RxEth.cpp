@@ -6,7 +6,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define PORT 1488
+#define PORT 1234
 
 int main() {
     int sockfd, newsockfd;

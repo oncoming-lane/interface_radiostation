@@ -11,7 +11,7 @@
 #include "TxRx.h"
 
 #define SERVER_IP "192.168.1.1" // IP адрес сервера
-#define SERVER_PORT 1488 // Порт сервера
+#define SERVER_PORT 1234 // Порт сервера
 
 //int transmit_eth(const char * message) {
 int transmit_eth(std::string message1) {

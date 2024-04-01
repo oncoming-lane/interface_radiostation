@@ -8,7 +8,7 @@
 #include <dirent.h>
 #include <iostream>
 
-#include "Tx.h"
+#include "TxRx.h"
 
 
 #define DEV_DIR "/dev"
@@ -40,6 +40,7 @@ char *find_ttyUSB_port() {
     closedir(dir);
     return port;
 }
+
 
 int transmit(std::string message1) {
     int fd;
@@ -86,4 +87,3 @@ int transmit(std::string message1) {
 
     return 0;
 }
-

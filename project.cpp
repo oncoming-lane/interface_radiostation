@@ -10,21 +10,21 @@
 #include <string.h>
 #include <errno.h>
 
-
-
 #include <SFML/Graphics.hpp>
 
 #include "buttons.h"
 #include "screen.h"
-#include "Tx.h"
+#include "TxRx.h"
+#include "TxRxEth.h"
+
 
 
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1900, 700), "Example", sf::Style::Default);
+    sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!", sf::Style::Default);
     
     //screen
-    Screen main_screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "Hello, world!");
+    Screen main_screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "SCREEN!");
 
 
     int color_choice = 0; //по дефолту - белый
@@ -63,7 +63,10 @@ int main() {
 
     };
 
+
+
     while (window.isOpen()) {
+        
         sf::Event event;
 
         while (window.pollEvent(event)) {
@@ -73,45 +76,39 @@ int main() {
             if (event.type == sf::Event::MouseButtonPressed) { //кнопка нажата - значит, будет отправка команды
                 find_ttyUSB_port();
                 for (int butt = 0; butt < buttons_bottom.size(); butt++){
-                    if (buttons_bottom[butt]->isMouseOver(window)){
-                        std::cout << "bottom" << butt + 1 << " clicked!" << std::endl;
+                    if (buttons_bottom[butt]->isMouseOver(window))
+                    {
                         switch (butt) {
-                        case 0: { transmit(commands["0"]); break; }
-                        case 1: { transmit(commands["1"]); break; }
-                        case 2: { transmit(commands["2"]); break; }
-                        case 4: { transmit(commands["4"]); break; }
-                        }
+                        case 0: { transmit_eth(commands["0"]); break; }
+                        case 1: { transmit_eth(commands["1"]); break; }
+                        case 2: { transmit_eth(commands["2"]); break; }
+                        case 4: { transmit_eth(commands["4"]); break; } }
                     }
                 }
-                
-
                 if (button_light.isMouseOver(window)) 
                     color_choice++;
                 //в силу ненадобности настройки яркости на самой станции заменим ее на смену цвета интерфейса
                     //transmit(commands["light"]);
 
-                if (button_home.isMouseOver(window)) 
-                    transmit(commands["light"]);
-                if (button_power.isMouseOver(window)) 
-                    transmit(commands["light"]);
-                if (button_emergency.isMouseOver(window)) 
-                    transmit(commands["light"]);
+                if (button_home.isMouseOver(window))        transmit_eth(commands["home"]);
+                if (button_power.isMouseOver(window))       transmit_eth(commands["power"]);
+                if (button_emergency.isMouseOver(window))   transmit_eth(commands["light"]);
 
-                if (button_arrow_left.isMouseOver(window)) 
-                    transmit(commands["left"]);
-                if (button_arrow_right.isMouseOver(window)) 
-                    transmit(commands["right"]);
-
-                button_home.change_color(window, color_choice%4);
-                button_light.change_color(window, color_choice%4);
-                button_power.change_color(window, color_choice%4);
-                //button_arrow_left.change_color(window, 3);
-                //button_arrow_right.change_color(window, 3);
-
+                if (button_arrow_left.isMouseOver(window))  transmit_eth(commands["left"]);
+                if (button_arrow_right.isMouseOver(window)) transmit_eth(commands["right"]);
+                    
+            button_home.change_color(window, color_choice%4);
+            button_light.change_color(window, color_choice%4);
+            button_power.change_color(window, color_choice%4);
+            //button_arrow_left.change_color(window, 3);
+            //button_arrow_right.change_color(window, 3);
+                //recieve();
+                
             }
 
 
         }
+        
 
         window.clear(sf::Color::Black);
 
@@ -128,12 +125,14 @@ int main() {
 
 
         main_screen.draw(window);
-
+        
         window.display();
+
     }
 
     for (int butt = 0; butt < buttons_bottom.size(); butt++)
         delete buttons_bottom[butt];
+
 
     return 0;
 }

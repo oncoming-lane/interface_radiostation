@@ -8,6 +8,9 @@
 #include <dirent.h>
 #include <sys/ioctl.h>
 
+#include "TxRx.h"
+
+
 #define BUFFER_SIZE 255
 #define DEV_DIR "/dev"
 
@@ -39,7 +42,8 @@ char *find_ttyUSB_port() {
     return port;
 }
 
-int main() {
+
+void recieve() {
     int fd;
     struct termios options;
     unsigned char buffer[BUFFER_SIZE];
@@ -50,7 +54,7 @@ int main() {
     fd = open(port, O_RDWR | O_NOCTTY);
     if (fd == -1) {
         perror("open_port: Unable to open /dev/ttyUSB0 - ");
-        return 1;
+        //return 1;
     }
 
     // Получаем текущие параметры порта
@@ -69,7 +73,7 @@ int main() {
     ioctl(fd, TIOCMGET, &status); // Получаем текущее состояние сигналов
     status &= ~TIOCM_DTR; // Отключаем DTR
     ioctl(fd, TIOCMSET, &status); // Устанавливаем новое состояние сигналов
-    usleep(100000);
+    usleep(10000);
 
     // Устанавливаем флаг RTS
     options.c_cflag |= CRTSCTS;
@@ -82,27 +86,27 @@ int main() {
     FILE *file = fopen("received_data.txt", "w");
     if (!file) {
         perror("Failed to open file");
-        return 1;
+        //return 1;
     }
 
-    usleep(100001);
+    usleep(10000);
 
     // Читаем данные из порта
     ssize_t bytes_read;
     while (1) {
-        bytes_read = read(fd, buffer, BUFFER_SIZE);
-        if (bytes_read > 0) {
-            //printf("Received data: ");
-            for (int i = 0; i < bytes_read; ++i) {
-                printf("Received data: %02X\n", buffer[i]); // Выводим байты в шестнадцатеричном формате
-                fprintf(file, "%02X", buffer[i]);
-            }
-            fflush(stdout); // Принудительно очищаем буфер вывода в терминал
-            fflush(file);
-         } else if (bytes_read == -1) {
-            perror("Error reading from port - ");
-            break;
+    bytes_read = read(fd, buffer, BUFFER_SIZE);
+    if (bytes_read > 0) {
+        //printf("Received data: ");
+        for (int i = 0; i < bytes_read; ++i) {
+            //printf("%02X ", buffer[i]); // Выводим байты в шестнадцатеричном формате
+            fprintf(file, "%02X", buffer[i]);
         }
+        fflush(stdout); // Принудительно очищаем буфер вывода в терминал
+        fflush(file);
+    } else if (bytes_read == -1) {
+        perror("Error reading from port - ");
+        //break;
+    }
     }
 
     // Закрываем файл
@@ -111,5 +115,9 @@ int main() {
     // Закрываем COM порт для приёма
     close(fd);
 
-    return 0;
+    //return 0;
 }
+
+int main() {
+    recieve();
+} 

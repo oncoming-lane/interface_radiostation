@@ -12,27 +12,27 @@ public:
         m_texture.loadFromFile(texturePath);
         m_rectangle.setSize(size);
         m_rectangle.setPosition(position);
-        m_buttonText.setFillColor(sf::Color::White);
+        m_screenText.setFillColor(sf::Color::White);
         m_rectangle.setTexture(&m_texture);
         m_font.loadFromFile("troika.otf");
-        m_buttonText.setFont(m_font);
-        m_buttonText.setString(text);
-        m_buttonText.setCharacterSize(20);
-        m_buttonText.setFillColor(sf::Color::Black);
-        m_buttonText.setPosition(position.x + size.x / 3 - m_buttonText.getLocalBounds().width / 3, 
-                                  position.y + size.y / 3 - m_buttonText.getLocalBounds().height / 3);
+        m_screenText.setFont(m_font);
+        m_screenText.setString(text);
+        m_screenText.setCharacterSize(50);
+        m_screenText.setFillColor(sf::Color::Black);
+        m_screenText.setPosition(position.x + size.x / 3 - m_screenText.getLocalBounds().width / 3, 
+                                  position.y + size.y / 3 - m_screenText.getLocalBounds().height / 3);
     }
 
     void draw(sf::RenderWindow& window) {
         window.draw(m_rectangle);
-        window.draw(m_buttonText);
+        window.draw(m_screenText);
     }
 
 private:
     sf::RectangleShape m_rectangle;
     sf::Vector2f m_position;
     sf::Vector2f m_size;
-    sf::Text m_buttonText;
+    sf::Text m_screenText;
     sf::Font m_font;
     std::string m_text;
     sf::Texture m_texture;
