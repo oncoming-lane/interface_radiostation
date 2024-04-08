@@ -1,14 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+#include <string>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <fstream>
 
 #define PORT 1234
 
-int receive_eth() 
+
+std::string receive_eth() 
 {
     int sockfd, newsockfd;
     socklen_t clilen;
@@ -20,8 +22,8 @@ int receive_eth()
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) 
     {
-        perror("Error opening socket");
-        exit(1);
+        std::cerr << "Error opening socket" << std::endl;
+        std::exit(1);
     }
 
     // Устанавливаем опцию SO_REUSEADDR
@@ -37,8 +39,8 @@ int receive_eth()
     // Привязываем сокет к адресу и порту
     if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
     {
-        perror("Error on binding");
-        exit(1);
+        std::cerr << "Error on binding" << std::endl;
+        std::exit(1);
     }
 
     // Слушаем входящие соединения
@@ -49,36 +51,38 @@ int receive_eth()
     newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
     if (newsockfd < 0) 
     {
-        perror("Error on accept");
-        exit(1);
+        std::cerr << "Error on accept" << std::endl;
+        std::exit(1);
     }
 
     // Читаем данные из сокета
     memset(buffer, 0, sizeof(buffer));
-    n = read(newsockfd, buffer, sizeof(buffer) - 1);
-    if (n < 0) 
+    time_t start_time = time(NULL);
+    while ((time(NULL) - start_time) < 0.5) 
     {
-        perror("Error reading from socket");
-        exit(1);
+        n = read(newsockfd, buffer, sizeof(buffer) - 1);
+        if (n < 0)
+        {
+            if (errno == EAGAIN || errno == EWOULDBLOCK)
+                continue; // Если нет данных для чтения, продолжаем цикл
+            else
+            {
+                std::cerr << "Error reading from socket" << std::endl;
+                exit(1);
+            }
+        }
+        if (n > 0) break; 
     }
-    printf("Here is the message: %s\n", buffer);
 
-    // Отправляем подтверждение клиенту
-    n = write(newsockfd, "I got your message", 18);
-    if (n < 0) 
-    {
-        perror("Error writing to socket");
-        exit(1);
-    }
+
+    std::string str(buffer, n); // Создание строки с явным указанием длины
+    
 
     // Закрываем сокеты
     close(newsockfd);
     close(sockfd);
 
-    return 0;
+    return str;
 }
 
-int main()
-{
-    receive_eth();
-}
+

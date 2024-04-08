@@ -24,9 +24,10 @@ public:
                                   position.y + size.y / 3 - m_screenText.getLocalBounds().height / 3);
     }
 
-    void change_text(std::string text)
+    void change_text(std::string new_text)
     {
-
+        
+        m_screenText.setString(new_text);
     }
 
     void draw(sf::RenderWindow& window) 

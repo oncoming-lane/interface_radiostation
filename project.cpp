@@ -20,7 +20,8 @@
 
 
 
-int main() {
+int main() 
+{
     sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!", sf::Style::Default);
     
     //screen
@@ -44,8 +45,8 @@ int main() {
     ButtonCircle button_emergency(sf::Vector2f(1750, 150), 60, "images/emergency.png", "");
 
     //словарь команд!
-    std::map <std::string, std::string > commands = {
-                                                //push up long      push up short     push down
+    std::map <std::string, std::string > commands = 
+    {                                           //push up long      push up short     push down
         {"0", "\x05\x83\x02\x57\x7A"},          //05 83 01 57 C1    05 83 02 57 7A    05 83 00 57 A8
         {"1", "\x05\x89\x02\x57\x24"},          //05 89 01 57 9F    05 89 02 57 24    05 89 00 57 F6
         {"2", "\x05\x84\x02\x57\xB5"},          //05 84 01 57 0E    05 84 02 57 B5    05 84 02 57 67
@@ -59,43 +60,33 @@ int main() {
 
         {"left", "\x05\x04\x01\x57\xF5"},       //05 04 01 57 F5
         {"right", "\x05\x04\xFF\x57\xCC"}       //05 04 FF 57 CC
-
-
     };
 
-
+   
 
     while (window.isOpen()) 
     {
         
         sf::Event event;
+        transmit_eth("START");
 
         while (window.pollEvent(event)) 
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed){
                 window.close();
+                break;
+            }
+                
 
             if (event.type == sf::Event::MouseButtonPressed) 
             { //кнопка нажата - значит, будет отправка команды
                 //find_ttyUSB_port();
                 for (int butt = 0; butt < buttons_bottom.size(); butt++)
-                {
                     if (buttons_bottom[butt]->isMouseOver(window))
-                    {
-                        switch (butt) 
-                        {
-                        case 0: { transmit_eth(commands["0"]); break; }
-                        case 1: { transmit_eth(commands["1"]); break; }
-                        case 2: { transmit_eth(commands["2"]); break; }
-                        case 3: { transmit_eth(commands["3"]); break; }
-                        case 4: { transmit_eth(commands["4"]); break; } 
-                        }
-                    }
-                }
-                if (button_light.isMouseOver(window)) 
-                    color_choice++;
+                        transmit_eth(commands[std::to_string(butt)]);
+
+                if (button_light.isMouseOver(window))       color_choice++;
                 //в силу ненадобности настройки яркости на самой станции заменим ее на смену цвета интерфейса
-                    //transmit(commands["light"]);
 
                 if (button_home.isMouseOver(window))        transmit_eth(commands["home"]);
                 if (button_power.isMouseOver(window))       transmit_eth(commands["power"]);
@@ -107,13 +98,9 @@ int main() {
             button_home.change_color(window, color_choice%4);
             button_light.change_color(window, color_choice%4);
             button_power.change_color(window, color_choice%4);
-            //button_arrow_left.change_color(window, 3);
-            //button_arrow_right.change_color(window, 3);
+            button_arrow_left.change_color(window, color_choice%4);
+            button_arrow_right.change_color(window, color_choice%4);
             
-
-            //main_screen.m_text("134");
-            
-                
             }
 
 
@@ -133,18 +120,22 @@ int main() {
         button_arrow_left.draw(window);
         button_arrow_right.draw(window);
 
+        
+        //std::string str = receive_eth();
 
+        //printf("%s", str);
+        //std::cout << str << std::endl;
+        //main_screen.change_text(str);
+        
         main_screen.draw(window);
         
-        //receive();
-
         window.display();
 
     }
 
+
     for (int butt = 0; butt < buttons_bottom.size(); butt++)
         delete buttons_bottom[butt];
-
 
     return 0;
 }
