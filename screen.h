@@ -1,12 +1,14 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 
 #include <math.h>   
 #include <SFML/Graphics.hpp>
 
-class Screen{
+class Screen_main{
 public:
-    Screen(sf::Vector2f position, sf::Vector2f size, std::string texturePath, std::string text):
+    Screen_main(sf::Vector2f position, sf::Vector2f size, std::string texturePath, std::string text):
          m_position(position), m_size(size), m_text(text) 
     {
         
@@ -21,15 +23,13 @@ public:
         m_screenText.setCharacterSize(50);
         m_screenText.setFillColor(sf::Color::Black);
         m_screenText.setPosition(position.x + size.x / 3 - m_screenText.getLocalBounds().width / 3, 
-                                  position.y + size.y / 3 - m_screenText.getLocalBounds().height / 3);
+                                 position.y + size.y / 3 - m_screenText.getLocalBounds().height / 3);
     }
 
     void change_text(std::string new_text)
     {
-        
         m_screenText.setString(new_text);
     }
-
     void draw(sf::RenderWindow& window) 
     {
         window.draw(m_rectangle);

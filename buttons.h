@@ -7,6 +7,8 @@
 #include <SFML/Graphics.hpp>
 
 
+extern std::map <std::string, std::string > commands;
+
 class Button {
 public:
     Button(sf::Vector2f position, std::string texturePath, std::string text):
@@ -123,4 +125,4 @@ private:
 };
 
 
-
+void buttons_create(std::vector<Button*>& buttons);

@@ -3,16 +3,9 @@
 #include <map>
 #include <thread> 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <errno.h>
-
 #include <X11/Xlib.h>
 #undef None
-#include <SFML/Graphics.hpp>
+
 
 #include "buttons.h"
 #include "screen.h"     
@@ -71,9 +64,8 @@ int main()
 
     buttons_create(buttons);
 
-     // Создание потока для прослушивания Ethernet соединения
+    // Создание потока для прослушивания Ethernet соединения
     std::thread ethernetThread(ethernetListener, &main_Screen);
-
 
     // Создание потока для обработки нажатий кнопок
     std::thread buttonThread(buttonListener, std::ref(window), std::ref(buttons));
@@ -99,7 +91,6 @@ int main()
     // Ожидание завершения потоков
     ethernetThread.join();
     buttonThread.join();
-
 
     // Освобождение памяти кнопок
     for (auto button : buttons) 

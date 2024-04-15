@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <iostream>
-
+#include <sys/ioctl.h>
 
 char *find_ttyUSB_port();
 

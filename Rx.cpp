@@ -1,20 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <string.h>
-#include <errno.h>
-#include <dirent.h>
-#include <sys/ioctl.h>
-
 #include "TxRx.h"
-
 
 #define BUFFER_SIZE 255
 #define DEV_DIR "/dev"
-
-
 
 void receive() 
 {

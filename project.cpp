@@ -19,7 +19,6 @@
 
 
 
-
 int main() 
 {
     sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!", sf::Style::Default);
@@ -68,7 +67,9 @@ int main()
     {
         
         sf::Event event;
-        transmit_eth("START");
+        receive_eth();
+        
+        //transmit_eth("START");
 
         while (window.pollEvent(event)) 
         {

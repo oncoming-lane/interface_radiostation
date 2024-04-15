@@ -1,14 +1,7 @@
-#include <iostream>
-#include <string>
-#include <unistd.h>
-#include <cstring>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fstream>
+#include "TxRx.h"
+#include "TxRxEth.h"
 
 #define PORT 1234
-
 
 std::string receive_eth() 
 {
