@@ -6,25 +6,23 @@
 #include <X11/Xlib.h>
 #undef None
 
-
 #include "buttons.h"
-#include "screen.h"     
+#include "screen.h"  
+#include "message.h"     
 #include "TxRx.h"
 #include "TxRxEth.h"
-
-
-
-//словарь команд!
-
 
 std::vector <Button*> buttons;
 
 // Функция прослушивания Ethernet соединения
-void* ethernetListener(Screen_main* main_screen) {
-    while (true) {
+void* ethernetListener(Screen_main* main_screen) 
+{
+    while (true) 
+    {
         // Принимайте данные по Ethernet и обрабатывайте их
         std::string data = receive_eth();
         std::cout << data << std::endl;// Делайте что-то с полученными данными, если это необходимо
+        message(data);
         main_screen->change_text(data);
     }
     return NULL;
@@ -32,20 +30,28 @@ void* ethernetListener(Screen_main* main_screen) {
 
 
 // Функция обработки нажатий кнопок
-void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons) {
-     
-    while (window.isOpen()) {
+void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons) 
+{
+    while (window.isOpen()) 
+    {
         sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+        while (window.pollEvent(event)) 
+        {
+            if (event.type == sf::Event::Closed) 
+            {
                 window.close();
+                return NULL;
             }
             if (event.type == sf::Event::MouseButtonPressed) 
-            { //кнопка нажата - значит, будет отправка команды
+            { //кнопка нажата - отправка команды
                 for (int butt = 0; butt < buttons.size(); butt++)
+                
                     if (buttons[butt]->isMouseOver(window))
+                    {
                         transmit_eth(commands[std::to_string(butt)]);
-
+                        if (butt == 7) 
+                            std::cout << "change text" << std::endl;
+                    }
             }
             // Обработка других событий кнопок...
         }
@@ -71,12 +77,15 @@ int main()
     std::thread buttonThread(buttonListener, std::ref(window), std::ref(buttons));
     
     // Основной цикл программы
-    while (window.isOpen()) {
+    while (window.isOpen()) 
+    {
         // Обработка событий окна и кнопок
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (window.pollEvent(event)) 
+        {
             // Обработка событий окна
-            if (event.type == sf::Event::Closed) {
+            if (event.type == sf::Event::Closed) 
+            {
                 window.close();
             }
         } 

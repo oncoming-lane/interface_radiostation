@@ -6,12 +6,12 @@
 #include <math.h>   
 #include <SFML/Graphics.hpp>
 
-class Screen_main{
+class Screen_main
+{
 public:
     Screen_main(sf::Vector2f position, sf::Vector2f size, std::string texturePath, std::string text):
          m_position(position), m_size(size), m_text(text) 
-    {
-        
+    {        
         m_texture.loadFromFile(texturePath);
         m_rectangle.setSize(size);
         m_rectangle.setPosition(position);

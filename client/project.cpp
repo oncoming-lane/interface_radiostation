@@ -24,7 +24,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!", sf::Style::Default);
     
     //screen
-    Screen main_screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "SCREEN!");
+    Screen_main main_screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "SCREEN!");
 
 
     int color_choice = 0; //по дефолту - белый

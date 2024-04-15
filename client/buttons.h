@@ -6,13 +6,15 @@
 #include <math.h>   
 #include <SFML/Graphics.hpp>
 
-
+//словарь команд!
 extern std::map <std::string, std::string > commands;
 
-class Button {
+class Button 
+{
 public:
     Button(sf::Vector2f position, std::string texturePath, std::string text):
-        m_position(position), m_text(text) {
+        m_position(position), m_text(text) 
+    {
         
         m_texture.loadFromFile(texturePath);
         m_font.loadFromFile("troika.otf");
@@ -36,10 +38,12 @@ protected:
     sf::Texture m_texture;
 };
 
-class ButtonRect : public Button {
+class ButtonRect : public Button 
+{
 public:
     ButtonRect(sf::Vector2f position, sf::Vector2f size, std::string texturePath, std::string text):
-        Button(position, texturePath, text), m_size(size) {
+        Button(position, texturePath, text), m_size(size) 
+    {
         
         m_rectangle.setSize(size);
         m_rectangle.setPosition(position);
@@ -48,22 +52,25 @@ public:
                                   position.y + size.y / 3 - m_buttonText.getLocalBounds().height / 3);
     }
 
-    void draw(sf::RenderWindow& window) override {
+    void draw(sf::RenderWindow& window) override 
+    {
         window.draw(m_rectangle);
         window.draw(m_buttonText);
     }
 
-    bool isMouseOver(sf::RenderWindow& window) override {
+    bool isMouseOver(sf::RenderWindow& window) override 
+    {
         sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
         if (mousePos.x >= m_position.x && mousePos.x <= m_position.x + m_size.x &&
-            mousePos.y >= m_position.y && mousePos.y <= m_position.y + m_size.y) {
-            return true;
-        }
+            mousePos.y >= m_position.y && mousePos.y <= m_position.y + m_size.y) 
+                return true;
         return false;
     }
 
-    void change_color(sf::RenderWindow& window, int color_num) {
-        switch (color_num){
+    void change_color(sf::RenderWindow& window, int color_num) 
+    {
+        switch (color_num)  
+        {
             case 1:{ m_rectangle.setFillColor(sf::Color::Green);  break; }
             case 2:{ m_rectangle.setFillColor(sf::Color::Red);    break; }
             case 3:{ m_rectangle.setFillColor(sf::Color::Blue);   break; }
@@ -80,11 +87,12 @@ private:
     sf::Vector2f m_size;
 };
 
-class ButtonCircle : public Button {
+class ButtonCircle : public Button 
+{
 public:
     ButtonCircle(sf::Vector2f position, float radius, std::string texturePath, std::string text):
-        Button(position, texturePath, text), m_radius(radius) {
-        
+                   Button(position, texturePath, text), m_radius(radius)  
+    {    
         m_circle.setRadius(radius);
         m_circle.setPosition(position);
         m_circle.setTexture(&m_texture);
@@ -93,27 +101,29 @@ public:
         m_circle.setOrigin(radius, radius);
     }
 
-    void draw(sf::RenderWindow& window) override {
+    void draw(sf::RenderWindow& window) override 
+    {
         window.draw(m_circle);
         window.draw(m_buttonText);
     }
 
-    bool isMouseOver(sf::RenderWindow& window) override {
+    bool isMouseOver(sf::RenderWindow& window) override 
+    {
         sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
         float distance = std::sqrt(std::pow(mousePos.x - m_position.x, 2) + std::pow(mousePos.y - m_position.y, 2));
-        if (distance <= m_radius) {
+        if (distance <= m_radius) 
             return true;
-        }
         return false;
     }
 
-    void change_color(sf::RenderWindow& window, int color_num) {
-        switch (color_num){
+    void change_color(sf::RenderWindow& window, int color_num) 
+    {
+        switch (color_num)
+        {
             case 1:{ m_circle.setFillColor(sf::Color::Green);  break; }
             case 2:{ m_circle.setFillColor(sf::Color::Red);    break; }
             case 3:{ m_circle.setFillColor(sf::Color::Cyan);   break; }
-            default: { m_circle.setFillColor(sf::Color::White); }
-            
+            default: { m_circle.setFillColor(sf::Color::White); }    
         } 
     
     }
