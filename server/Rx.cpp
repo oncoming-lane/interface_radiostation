@@ -1,11 +1,5 @@
 #include "TxRx.h"
-
-#define BUFFER_SIZE 255
 #define DEV_DIR "/dev"
-
-
-
-
 
 char *find_ttyUSB_port() {
     DIR *dir;
@@ -35,17 +29,9 @@ char *find_ttyUSB_port() {
     return port;
 }
 
-
-
-
-
-
-
-
-int Rx() {
+void Rx(unsigned char * buffer) {
     int fd;
     struct termios options;
-    unsigned char buffer[BUFFER_SIZE];
     
     printf("RX EXECS NOW\n");
 
@@ -55,7 +41,6 @@ int Rx() {
     fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (fd == -1) {
         perror("open_port: Unable to open /dev/ttyUSB0 - ");
-        return 1;
     }
 
     // Получаем текущие параметры порта
@@ -84,14 +69,6 @@ int Rx() {
     // Применяем новые параметры порта
     tcsetattr(fd, TCSANOW, &options);
     
-
-    // Открываем файл для записи данных
-    FILE *file = fopen("received_data.txt", "w");
-    if (!file) {
-        perror("Failed to open file");
-        return 1;
-    }
-
     //usleep(100000);
 
     ssize_t bytes_read = 0;
@@ -104,49 +81,35 @@ int Rx() {
                 continue;
             } else {
                 perror("read error");
-                fclose(file);
                 close(fd);
-                return 1;
             }
         }
     }
 
-    for (int i = 0; i < bytes_read; ++i) {
-            fprintf(file, "%02X", buffer[i]);
-        }
+    memset(buffer, 0, BUFFER_SIZE);
 
     time_t start_time = time(NULL); // Засекаем начальное время чтения данных
-    while ((time(NULL) - start_time) < 0.25) {
+
+    while ((time(NULL) - start_time) < 0.05) {
         bytes_read = read(fd, buffer, BUFFER_SIZE); // Читаем данные из порта
+
         if (bytes_read == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 // Если нет данных для чтения, продолжаем цикл
                 continue;
-            } else {
+            } 
+            
+            else {
                 perror("read error");
-                fclose(file);
                 close(fd);
-                return 1;
             }
         }
+
+        buffer += bytes_read;
         
-        // Если есть данные для чтения, записываем их в файл
-        for (int i = 0; i < bytes_read; ++i) {
-            printf("Received data: %02X\n", buffer[i]);
-            fprintf(file, "%02X", buffer[i]);
-        }
-
-        fflush(stdout);
-        fflush(file);
-    }
-
-    printf("WHILE EDNED\n");
-    
-    // Закрываем файл
-    fclose(file);
-    
+        /*for (int i = 0; i < bytes_read; ++i) 
+            printf("Received data: %02X (Char: `%c`, Int: `%d`)\n", buffer[i], buffer[i], buffer[i]);*/
+    }    
     // Закрываем COM порт для приёма
     close(fd);
-
-    return 0;
 }

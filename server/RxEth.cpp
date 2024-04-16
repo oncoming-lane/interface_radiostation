@@ -1,13 +1,10 @@
 #include "TxRx.h"
 #define PORT 1234
-#define FILENAME "received_data.txt"
 
-int RxEth() {
+void RxEth(unsigned char * buffer) { // TODO Change char* to void, because you store data in buffer
     int sockfd, newsockfd;
     socklen_t clilen;
-    char buffer[256];
     struct sockaddr_in serv_addr, cli_addr;
-    int n;
 
     // Создаем сокет
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -38,19 +35,18 @@ int RxEth() {
 
     // Принимаем входящее соединение
     newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+
     if (newsockfd < 0) {
         perror("Error on accept");
         exit(1);
     }
 
     // Читаем данные из сокета
-    memset(buffer, 0, sizeof(buffer));
-    n = read(newsockfd, buffer, sizeof(buffer) - 1);
+    int n = read(newsockfd, buffer, BUFFER_SIZE);
     if (n < 0) {
         perror("Error reading from socket");
         exit(1);
     }
-    printf("Here is the message: %s\n", buffer);
 
     // Отправляем подтверждение клиенту
     /*n = write(newsockfd, "I got your message", 18);
@@ -59,20 +55,7 @@ int RxEth() {
         exit(1);
     }*/
     
-     // Записываем данные в файл
-    FILE *file = fopen(FILENAME, "w");
-    if (!file) {
-        perror("Error opening file");
-        exit(1);
-    }
-    fprintf(file, "%s", buffer);
-    fclose(file);
-    printf("Data written to file: %s\n", FILENAME);
-
-
     // Закрываем сокеты
     close(newsockfd);
     close(sockfd);
-
-    return 0;
 }

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,8 +16,14 @@
 #include <pthread.h>
 #include <time.h>
 
-int Rx();
-int Tx();
+#define BUFFER_SIZE 255
+
+void Rx(unsigned char * buffer);
+int Tx(unsigned char *buffer);
+
 char *find_ttyUSB_port();
-int RxEth();
-int TxEth();
+
+void RxEth(unsigned char * buffer);
+void TxEth(unsigned char *global_buffer);
+
+
