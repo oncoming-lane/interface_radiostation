@@ -9,6 +9,9 @@
 //словарь команд!
 extern std::map <std::string, std::string > commands;
 
+
+//extern int color_num;
+
 class Button 
 {
 public:
@@ -74,6 +77,9 @@ public:
             case 1:{ m_rectangle.setFillColor(sf::Color::Green);  break; }
             case 2:{ m_rectangle.setFillColor(sf::Color::Red);    break; }
             case 3:{ m_rectangle.setFillColor(sf::Color::Blue);   break; }
+            case 4:{ m_rectangle.setFillColor(sf::Color::Magenta);   break; }
+            case 5:{ m_rectangle.setFillColor(sf::Color::Cyan);   break; }
+            case 6:{ m_rectangle.setFillColor(sf::Color::Yellow);   break; }
             default: { m_rectangle.setFillColor(sf::Color::White); }
             
         } 
@@ -118,14 +124,17 @@ public:
 
     void change_color(sf::RenderWindow& window, int color_num) 
     {
-        switch (color_num)
+        switch (color_num)  
         {
             case 1:{ m_circle.setFillColor(sf::Color::Green);  break; }
             case 2:{ m_circle.setFillColor(sf::Color::Red);    break; }
-            case 3:{ m_circle.setFillColor(sf::Color::Cyan);   break; }
-            default: { m_circle.setFillColor(sf::Color::White); }    
+            case 3:{ m_circle.setFillColor(sf::Color::Blue);   break; }
+            case 4:{ m_circle.setFillColor(sf::Color::Magenta);   break; }
+            case 5:{ m_circle.setFillColor(sf::Color::Cyan);   break; }
+            case 6:{ m_circle.setFillColor(sf::Color::Yellow);   break; }
+            default: { m_circle.setFillColor(sf::Color::White); }
+            
         } 
-    
     }
 
 

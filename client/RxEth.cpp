@@ -69,7 +69,6 @@ std::string receive_eth()
 
 
     std::string str(buffer, n); // Создание строки с явным указанием длины
-    
 
     // Закрываем сокеты
     close(newsockfd);

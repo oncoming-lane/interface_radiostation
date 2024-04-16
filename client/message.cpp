@@ -9,10 +9,11 @@ std::string message(std::string data)
     for (size_t i = 0; i < hexString.length(); i += 2) {
         std::string byte = hexString.substr(i, 2);
         char chr = (char)std::stoul(byte, nullptr, 16); // Конвертируем два символа в число в 16-ричной СС
+        //if (isalpha(chr) or isdigit(chr) ) 
         asciiString.push_back(chr); // Добавляем ASCII символ к строке
     }
 
-    std::cout << "ASCII строка: " << asciiString << std::endl;
+    //std::cout << "ASCII строка: " << asciiString << std::endl;
     
-    return data;
+    return asciiString;
 }
