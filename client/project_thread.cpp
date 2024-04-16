@@ -19,10 +19,9 @@ void* ethernetListener(Screen_main* main_screen)
 {
     while (true) 
     {
-        // Принимайте данные по Ethernet и обрабатывайте их
         std::string data = receive_eth();
-        std::cout << data << std::endl;// Делайте что-то с полученными данными, если это необходимо
-        message(data);
+        std::cout << data << std::endl;
+        message(data); // Функция обработки сообщения и вывода на экран 
         main_screen->change_text(data);
     }
     return NULL;
@@ -50,7 +49,7 @@ void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons)
                     {
                         transmit_eth(commands[std::to_string(butt)]);
                         if (butt == 7) 
-                            std::cout << "change text" << std::endl;
+                            std::cout << "change color" << std::endl;
                     }
             }
             // Обработка других событий кнопок...
@@ -89,7 +88,7 @@ int main()
                 window.close();
             }
         } 
-        //window.clear(sf::Color::Black);
+        window.clear(sf::Color::Black);
         main_Screen.draw(window);
         for (int butt = 0; butt < buttons.size(); butt++)
             buttons[butt]->draw(window);
@@ -101,7 +100,7 @@ int main()
     ethernetThread.join();
     buttonThread.join();
 
-    // Освобождение памяти кнопок
+    // Освобождение памяти выделенной для кнопок
     for (auto button : buttons) 
         delete button;
 
