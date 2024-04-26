@@ -77,4 +77,3 @@ std::string receive_eth()
     return str;
 }
 
-

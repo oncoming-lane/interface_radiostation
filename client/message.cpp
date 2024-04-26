@@ -1,19 +1,48 @@
+#include <sstream>
+#include <cctype>
+
 #include "message.h"
+#include "screen.h"
 
-std::string message(std::string data)
+
+std::vector<sf::Text*> message(std::string data)
 {
-    std::string hexString = data;
-    std::string asciiString;
 
-    // Проходим по строке с шестнадцатеричными символами и конвертируем каждые два символа в символ ASCII
-    for (size_t i = 0; i < hexString.length(); i += 2) {
-        std::string byte = hexString.substr(i, 2);
-        char chr = (char)std::stoul(byte, nullptr, 16); // Конвертируем два символа в число в 16-ричной СС
-        //if (isalpha(chr) or isdigit(chr) ) 
-        asciiString.push_back(chr); // Добавляем ASCII символ к строке
+    std::istringstream iss(data);
+    std::string token;
+    std::string result = "";
+    std::string message = "";
+
+    
+    sf::Font font;
+    font.loadFromFile("troika.otf");
+
+    std::vector<sf::Text*> texts;
+    int i = 0;
+    while (std::getline(iss, token, '^')) 
+    { // Разбиваем строку по символу '^'
+        //main_screen->change_text(token, sf::Vector2f(s + 200 * i, 300));
+        i++;
+        sf::Text* text = new sf::Text(token, font, 24);
+        text->setPosition(300 + 200 * i, 300);
+        texts.push_back(text);
+        
+        std::cout << token << std::endl; // Выводим подстроку
+    }        
+
+
+
+    
+    for (char c : data) 
+    {
+    // Проверяем, является ли символ буквой или цифрой в ASCII
+        if (std::isalnum(c))
+            result += c; // Если да, добавляем его к результату
     }
 
-    //std::cout << "ASCII строка: " << asciiString << std::endl;
+    std::cout << "Результат: " << result << std::endl;
+
+
     
-    return asciiString;
+    return texts;
 }

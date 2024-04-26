@@ -6,8 +6,7 @@
 #include <math.h>   
 #include <SFML/Graphics.hpp>
 
-//словарь команд!
-extern std::map <std::string, std::string > commands;
+
 
 
 //extern int color_num;
