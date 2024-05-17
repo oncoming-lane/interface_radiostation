@@ -56,11 +56,8 @@ void* ethernetListener(sf::RenderWindow& window)
     return NULL;
 }
 
-
 // Функция обработки нажатий кнопок
-//void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons, int * color_choice)
 void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons) 
-
 {
     while (window.isOpen()) 
     {
@@ -114,7 +111,6 @@ int main()
     std::thread ethernetThread(ethernetListener, std::ref(window));
 
     // Создание потока для обработки нажатий кнопок
-    //std::thread buttonThread(buttonListener, std::ref(window), std::ref(buttons), &color_choice);
     std::thread buttonThread(buttonListener, std::ref(window), std::ref(buttons));
 
     
@@ -130,22 +126,23 @@ int main()
         } 
         window.clear(sf::Color::Black);
         main_Screen.draw(window);
-        //std::cout << color_choice << std::endl;
         for (int butt = 0; butt < buttons.size(); butt++)
         {
-            //buttons[butt]->change_color(window, color_choice%6);
             buttons[butt]->draw(window);
         }
         window.display();
+    
+        
     }   
-
-    // Ожидание завершения потоков  
-    ethernetThread.join();
-    buttonThread.join();
-
+    
     // Освобождение памяти выделенной для кнопок
     for (auto button : buttons) 
         delete button;
+    buttons.clear(); // Очистка вектора кнопок
+    
+    // Ожидание завершения потоков  
+    ethernetThread.join();
+    buttonThread.join();
 
     return 0;
 }
