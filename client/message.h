@@ -6,4 +6,4 @@
 
 #include "screen.h"
 
-std::vector<sf::Text*> message(std::string data);
+void message(std::string data, std::vector<std::string> *texts);

@@ -1,6 +1,9 @@
 #include <vector>
 #include <map>
 #include <thread> 
+#include <iostream> 
+#include <functional>
+#include <atomic>
 
 #include <X11/Xlib.h>
 #undef None
@@ -11,7 +14,6 @@
 #include "TxRx.h"
 #include "TxRxEth.h"
 
-std::vector <Button*> buttons;
 //словарь команд!
 std::map <std::string, std::string > commands = 
 {                                           //push up long      push up short     push down
@@ -30,45 +32,52 @@ std::map <std::string, std::string > commands =
     {"6", "\x05\x04\xFF\x57\xCC"}           //05 04 FF 57 CC                                            button_arrow_right
 };
 
-
+bool __listener_thread_running = true;
 
 // Функция прослушивания Ethernet соединения
-void* ethernetListener(sf::RenderWindow& window) 
+void ethernetListener(std::vector<std::string> *texts) 
 {
-    while (true) 
+    while (__listener_thread_running) 
     {
         std::string data = receive_eth();
         std::cout << "receive>" << data << std::endl;
-        
-        // Функция обработки сообщения и вывода на экран 
-        std::vector<sf::Text*> texts = message(data);
-        // Отрисовываем все объекты sf::Text из вектора
-        for (const auto& text : texts) 
-            window.draw(*text);
-        for (auto& text : texts) 
-            delete text;
-        window.display();
+        message(data, texts);
+    }
 
-
-    }        
-    
-    
-    return NULL;
 }
 
-// Функция обработки нажатий кнопок
-void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons) 
+int main() 
 {
+    XInitThreads();
+
+    sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!");
+    window.setActive(false);
+
+    // Создание экрана
+    Screen_main main_Screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "Screen_main!");
+
+    // Создание кнопок
+    std::vector <Button*> buttons;
+    buttons_create(buttons);
+
+    // Создание потока для прослушивания Ethernet соединения
+    std::vector<std::string> texts;
+    sf::Thread ethernetThread(&ethernetListener, &texts);
+    ethernetThread.launch();
+
+    sf::Font font;
+    font.loadFromFile("troika.otf");
+
+    // Основной цикл программы
     while (window.isOpen()) 
     {
+        // Обработка событий окна и кнопок
         sf::Event event;
-        while (window.pollEvent(event)) 
-        { // Событие окна
+        while (window.pollEvent(event)) // Обработка событий окна
+        {
             if (event.type == sf::Event::Closed) 
-            { // Закрытие окна
                 window.close();
-                return NULL;
-            }
+
             if (event.type == sf::Event::MouseButtonPressed) 
             { //кнопка нажата - отправка команды
                 for (int butt = 0; butt < buttons.size(); butt++)
@@ -78,71 +87,35 @@ void* buttonListener(sf::RenderWindow& window, std::vector<Button*>& buttons)
                         if (butt == 7) 
                         {
                             std::cout << "change color" << std::endl;
-                            //color_choice++;
-                            //exit(1);
                         }
                         
                     }
             }
-            //if (event.type == sf::Event::MouseButtonReleased) 
-            
 
-            // Обработка других событий кнопок...
+            window.clear(sf::Color::Black);
+            main_Screen.draw(window);
+
+            for (int butt = 0; butt < buttons.size(); butt++)
+                buttons[butt]->draw(window);
+
+            for (size_t i = 0; i < texts.size(); i++) 
+            {
+                sf::Text text(texts[i], font);
+                text.setPosition(300 + i * 200, 300);
+                text.setFillColor(sf::Color::Black);
+                window.draw(text);
+            }
+
+            window.display();
         }
     }
-    return NULL;
-}
-
-
-
-int main() 
-{
-    XInitThreads();
-    sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!");
-    
-    // Создание экрана
-    Screen_main main_Screen(sf::Vector2f(300, 70), sf::Vector2f(1150, 350), "images/white.png", "Screen_main!");
-
-    // Создание кнопок
-    buttons_create(buttons);
-    //int color_choice = 0; //по дефолту - белый
-
-    // Создание потока для прослушивания Ethernet соединения
-    std::thread ethernetThread(ethernetListener, std::ref(window));
-
-    // Создание потока для обработки нажатий кнопок
-    std::thread buttonThread(buttonListener, std::ref(window), std::ref(buttons));
-
-    
-    // Основной цикл программы
-    while (window.isOpen()) 
-    {
-        // Обработка событий окна и кнопок
-        sf::Event event;
-        while (window.pollEvent(event)) 
-        {// Обработка событий окна
-            if (event.type == sf::Event::Closed) 
-                window.close();
-        } 
-        window.clear(sf::Color::Black);
-        main_Screen.draw(window);
-        for (int butt = 0; butt < buttons.size(); butt++)
-        {
-            buttons[butt]->draw(window);
-        }
-        window.display();
-    
-        
-    }   
     
     // Освобождение памяти выделенной для кнопок
     for (auto button : buttons) 
         delete button;
-    buttons.clear(); // Очистка вектора кнопок
-    
-    // Ожидание завершения потоков  
-    ethernetThread.join();
-    buttonThread.join();
+
+    // Остановка потока
+    ethernetThread.terminate();
 
     return 0;
 }
