@@ -2,10 +2,12 @@
 
 int main() {
     while (1) {
-        // Считываем данные с Ethernet порта и записываем их в файл
-        RxEth();
-        // Отправляем данные из файла на радиостанцию
-        Tx();
+        unsigned char buffer[BUFFER_SIZE]; // Выделение памяти для буфера
+        memset(buffer, 0, BUFFER_SIZE);
+        
+        Rx(buffer);// Считываем данные с Ethernet порта и записываем их в файл
+        TxEth(buffer);// Отправляем данные из файла на радиостанцию
+    
     }
 
 

@@ -39,8 +39,6 @@ int Tx(unsigned char *buffer) {
 
     usleep(10000);
 
-    // Читаем данные из файла
-
     // Отправляем данные через COM порт
     int bytes_written = write(fd, buffer, BUFFER_SIZE);
 

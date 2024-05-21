@@ -1,7 +1,7 @@
 #include "TxRx.h"
 #define PORT 1234
 
-void RxEth(unsigned char * buffer) { // TODO Change char* to void, because you store data in buffer
+void RxEth(unsigned char * buffer) { 
     int sockfd, newsockfd;
     socklen_t clilen;
     struct sockaddr_in serv_addr, cli_addr;
