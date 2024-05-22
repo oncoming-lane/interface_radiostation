@@ -6,9 +6,9 @@
 #define FORMAT SND_PCM_FORMAT_S16_LE
 
 int main() {
-    int err;
+    int      err;
     unsigned sample_rate = 8000;
-    int16_t buffer[1024];
+    int16_t  buffer[1024];
 
     FILE *file = fopen("audio_data.txt", "r");
     if (!file) {

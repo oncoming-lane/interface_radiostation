@@ -18,12 +18,10 @@
 
 #define BUFFER_SIZE 255
 
-void Rx(unsigned char * buffer);
-int Tx(unsigned char *buffer);
+void Rx(unsigned char *buffer);
+int  Tx(unsigned char *buffer);
 
 char *find_ttyUSB_port();
 
-void RxEth(unsigned char * buffer);
+void RxEth(unsigned char *buffer);
 void TxEth(unsigned char *global_buffer);
-
-

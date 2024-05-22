@@ -2,9 +2,9 @@
 #define DEV_DIR "/dev"
 
 char *find_ttyUSB_port() {
-    DIR *dir;
+    DIR           *dir;
     struct dirent *entry;
-    char *port = NULL;
+    char          *port = NULL;
 
     dir = opendir(DEV_DIR);
     if (!dir) {
@@ -14,7 +14,7 @@ char *find_ttyUSB_port() {
 
     while ((entry = readdir(dir)) != NULL) {
         if (strncmp(entry->d_name, "ttyUSB", 6) == 0) {
-            port = (char*)malloc(strlen(DEV_DIR) + strlen(entry->d_name) + 2);
+            port = (char *)malloc(strlen(DEV_DIR) + strlen(entry->d_name) + 2);
             if (!port) {
                 perror("Memory allocation error");
                 closedir(dir);
@@ -29,10 +29,10 @@ char *find_ttyUSB_port() {
     return port;
 }
 
-void Rx(unsigned char * buffer) {
-    int fd;
+void Rx(unsigned char *buffer) {
+    int            fd;
     struct termios options;
-    
+
     printf("RX EXECS NOW\n");
 
     char *port = find_ttyUSB_port();
@@ -49,27 +49,27 @@ void Rx(unsigned char * buffer) {
     // Устанавливаем стандартные параметры порта для приёма
     cfsetispeed(&options, B9600);
     cfsetospeed(&options, B9600);
-    options.c_cflag &= ~PARENB;    // Без контроля четности
-    options.c_cflag &= ~CSTOPB;    // Один стоп-бит
-    options.c_cflag &= ~CSIZE;     // Сбрасываем биты размера байта
-    options.c_cflag |= CS8;        // Устанавливаем 8 битов данных
+    options.c_cflag &= ~PARENB;  // Без контроля четности
+    options.c_cflag &= ~CSTOPB;  // Один стоп-бит
+    options.c_cflag &= ~CSIZE;   // Сбрасываем биты размера байта
+    options.c_cflag |= CS8;      // Устанавливаем 8 битов данных
 
-    //options.c_cc[VTIME] = 10;
-    //options.c_cc[VMIN] = 0;
+    // options.c_cc[VTIME] = 10;
+    // options.c_cc[VMIN] = 0;
 
     // Отключаем сигнал DTR
     int status;
-    ioctl(fd, TIOCMGET, &status); // Получаем текущее состояние сигналов
-    status &= ~TIOCM_DTR; // Отключаем DTR
-    ioctl(fd, TIOCMSET, &status); // Устанавливаем новое состояние сигналов
-    //usleep(100000);
+    ioctl(fd, TIOCMGET, &status);  // Получаем текущее состояние сигналов
+    status &= ~TIOCM_DTR;          // Отключаем DTR
+    ioctl(fd, TIOCMSET, &status);  // Устанавливаем новое состояние сигналов
+    // usleep(100000);
 
     // Устанавливаем флаг RTS
     options.c_cflag |= CRTSCTS;
     // Применяем новые параметры порта
     tcsetattr(fd, TCSANOW, &options);
-    
-    //usleep(100000);
+
+    // usleep(100000);
 
     ssize_t bytes_read = 0;
     // Ожидаем первой порции данных
@@ -79,7 +79,8 @@ void Rx(unsigned char * buffer) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 // Если нет данных для чтения, продолжаем ожидать
                 continue;
-            } else {
+            }
+            else {
                 perror("read error");
                 close(fd);
             }
@@ -88,17 +89,17 @@ void Rx(unsigned char * buffer) {
 
     memset(buffer, 0, BUFFER_SIZE);
 
-    time_t start_time = time(NULL); // Засекаем начальное время чтения данных
+    time_t start_time = time(NULL);  // Засекаем начальное время чтения данных
 
     while ((time(NULL) - start_time) < 0.05) {
-        bytes_read = read(fd, buffer, BUFFER_SIZE); // Читаем данные из порта
+        bytes_read = read(fd, buffer, BUFFER_SIZE);  // Читаем данные из порта
 
         if (bytes_read == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 // Если нет данных для чтения, продолжаем цикл
                 continue;
-            } 
-            
+            }
+
             else {
                 perror("read error");
                 close(fd);
@@ -106,10 +107,10 @@ void Rx(unsigned char * buffer) {
         }
 
         buffer += bytes_read;
-        
-        /*for (int i = 0; i < bytes_read; ++i) 
+
+        /*for (int i = 0; i < bytes_read; ++i)
             printf("Received data: %02X (Char: `%c`, Int: `%d`)\n", buffer[i], buffer[i], buffer[i]);*/
-    }    
+    }
     // Закрываем COM порт для приёма
     close(fd);
 }

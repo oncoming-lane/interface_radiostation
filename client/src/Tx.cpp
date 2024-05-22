@@ -1,12 +1,11 @@
 #include "TxRx.h"
 
-
 #define DEV_DIR "/dev"
 
 char *find_ttyUSB_port() {
-    DIR *dir;
+    DIR           *dir;
     struct dirent *entry;
-    char *port = NULL;
+    char          *port = NULL;
 
     dir = opendir(DEV_DIR);
     if (!dir) {
@@ -16,7 +15,7 @@ char *find_ttyUSB_port() {
 
     while ((entry = readdir(dir)) != NULL) {
         if (strncmp(entry->d_name, "ttyUSB", 6) == 0) {
-            port = (char*)malloc(strlen(DEV_DIR) + strlen(entry->d_name) + 2);
+            port = (char *)malloc(strlen(DEV_DIR) + strlen(entry->d_name) + 2);
             if (!port) {
                 perror("Memory allocation error");
                 closedir(dir);
@@ -31,19 +30,18 @@ char *find_ttyUSB_port() {
     return port;
 }
 
-
 int transmit(std::string message1) {
-    int fd;
+    int            fd;
     struct termios options;
-    const char * message = message1.c_str();
-    char *port = find_ttyUSB_port();
-    //printf("Found ttyUSB port: %s\n", port);
-    
+    const char    *message = message1.c_str();
+    char          *port    = find_ttyUSB_port();
+    // printf("Found ttyUSB port: %s\n", port);
+
     // Открываем COM порт для передачи
     fd = open(port, O_RDWR | O_NOCTTY);
     if (fd == -1) {
         perror("open_port: Unable to open /dev/ttyUSB0 - ");
-        //return 1;
+        // return 1;
     }
 
     // Получаем текущие параметры порта
@@ -52,10 +50,10 @@ int transmit(std::string message1) {
     // Устанавливаем стандартные параметры порта для передачи
     cfsetispeed(&options, B9600);
     cfsetospeed(&options, B9600);
-    options.c_cflag &= ~PARENB;    // Без контроля четности
-    options.c_cflag &= ~CSTOPB;    // Один стоп-бит
-    options.c_cflag &= ~CSIZE;     // Сбрасываем биты размера байта
-    options.c_cflag |= CS8;        // Устанавливаем 8 битов данных
+    options.c_cflag &= ~PARENB;  // Без контроля четности
+    options.c_cflag &= ~CSTOPB;  // Один стоп-бит
+    options.c_cflag &= ~CSIZE;   // Сбрасываем биты размера байта
+    options.c_cflag |= CS8;      // Устанавливаем 8 битов данных
 
     // Устанавливаем флаг HUPCL
     options.c_cflag |= HUPCL;

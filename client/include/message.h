@@ -6,4 +6,4 @@
 
 #include "screen.h"
 
-void message(std::string data, std::vector<std::string> *texts);
+void message(std::string &data, std::vector<std::string> *texts);

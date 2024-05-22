@@ -2,7 +2,7 @@
 #define DEV_DIR "/dev"
 
 int Tx(unsigned char *buffer) {
-    int fd;
+    int            fd;
     struct termios options;
 
     char *port = find_ttyUSB_port();
@@ -24,12 +24,14 @@ int Tx(unsigned char *buffer) {
     cfsetospeed(&options, B9600);
 
     // Устанавливаем параметры порта
-    options.c_cflag &= ~(CSIZE | CSTOPB | PARENB); // Очищаем биты размера байта, стоп-бита и биты контроля четности
-    options.c_cflag |= CS8; // Устанавливаем 8 битов данных
-    options.c_cflag |= CLOCAL | CREAD | HUPCL; // Устанавливаем флаги для локального режима, разрешения приема данных и сброса линии при закрытии
-    options.c_iflag |= IGNBRK | IGNPAR; // Игнорируем BREAK-сигналы и ошибки битов четности
-    options.c_oflag = 0; // Отключаем обработку выходного потока
-    options.c_lflag = 0; // Отключаем обработку локального потока
+    options.c_cflag &= ~(CSIZE | CSTOPB | PARENB);  // Очищаем биты размера байта, стоп-бита и биты контроля четности
+    options.c_cflag |= CS8;  // Устанавливаем 8 битов данных
+    options.c_cflag |=
+        CLOCAL | CREAD |
+        HUPCL;  // Устанавливаем флаги для локального режима, разрешения приема данных и сброса линии при закрытии
+    options.c_iflag |= IGNBRK | IGNPAR;  // Игнорируем BREAK-сигналы и ошибки битов четности
+    options.c_oflag = 0;                 // Отключаем обработку выходного потока
+    options.c_lflag = 0;                 // Отключаем обработку локального потока
 
     // Устанавливаем флаги управления потоком (например, RTS/CTS)
     options.c_cflag |= CRTSCTS;

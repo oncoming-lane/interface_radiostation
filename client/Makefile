@@ -1,26 +1,30 @@
 CXX = g++
-CXXFLAGS = -D _DEBUG -D _SHOW_STACK_TRACE -ggdb3 -std=c++17 -O0 -Wall -g -std=c++11 -pthread -lsfml-graphics -lsfml-window -lsfml-system -lX11
-files = TxEth.cpp RxEth.cpp buttons.cpp message.cpp 
-headers = TxRx.h
-objects = $(files:.cpp=.o)
 
-buildDir = build
-srcDir = src
+BUILDDIR = build
+SRCDIR   = src
+ASSETDIR = assets
+
+DBGFLAGS = -g -O0 -Wall -Wextra -D_DEBUG -D_SHOW_STACK_TRACE
+CXXFLAGS = $(DBGFLAGS) -Iinclude -std=c++11 -pthread 
+LDFLAGS  = -lsfml-graphics -lsfml-window -lsfml-system -lX11
+
+SRC = TxEth.cpp RxEth.cpp buttons.cpp message.cpp project_thread.cpp
+OBJ = $(SRC:.cpp=.o)
 
 .PHONY: all clean prepare
 all: prepare main
 
-$(addprefix $(buildDir)/, $(objects)): $(buildDir)/%.o: $(srcDir)/%.cpp
+$(addprefix $(BUILDDIR)/, $(OBJ)): $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 		@echo [CC] $< -o $@
-		@$(CXX) $(CXXFLAGS) -Iinclude -c $(realpath $<) -o $@
+		@$(CXX) $(CXXFLAGS) -c $(realpath $<) -o $@
 
-main: $(addprefix $(buildDir)/, $(objects))
+main: $(addprefix $(BUILDDIR)/, $(OBJ))
 		@echo [CC] $^ -o $@
-		@$(CXX) $(CXXFLAGS) $^ -o $(addprefix $(buildDir)/, $@)
+		@$(CXX) $(CXXFLAGS) $^ -o $(addprefix $(BUILDDIR)/, $@) $(LDFLAGS)
 
 clean:
-		rm -f build/*.o all
-		rm build/cte
+		rm -rf $(BUILDDIR)
 
 prepare:
-		@mkdir -p $(buildDir)
+		@mkdir -p $(BUILDDIR)
+		@cp -r $(ASSETDIR) $(BUILDDIR) 
