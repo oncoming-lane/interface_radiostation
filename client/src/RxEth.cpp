@@ -1,7 +1,7 @@
 #include "TxRx.h"
 #include "TxRxEth.h"
 
-#define PORT 1234
+#define PORT 1234  //ноутбук и малинка
 
 std::string receive_eth() {
     int                sockfd, newsockfd;

@@ -89,12 +89,6 @@ int main() {
                     transmit_eth(commands["left"]);
                 if (button_arrow_right.isMouseOver(window))
                     transmit_eth(commands["right"]);
-
-                button_home.change_color(window, color_choice % 4);
-                button_light.change_color(window, color_choice % 4);
-                button_power.change_color(window, color_choice % 4);
-                button_arrow_left.change_color(window, color_choice % 4);
-                button_arrow_right.change_color(window, color_choice % 4);
             }
         }
 
