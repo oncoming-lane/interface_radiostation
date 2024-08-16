@@ -11,7 +11,6 @@
 #include "buttons.h"
 #include "screen.h"
 #include "message.h"
-#include "TxRx.h"
 #include "TxRxEth.h"
 
 //словарь команд!

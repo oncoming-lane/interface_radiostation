@@ -1,4 +1,3 @@
-#include "TxRx.h"
 #include "TxRxEth.h"
 
 #define PORT 5678  //ноутбук и малинка
