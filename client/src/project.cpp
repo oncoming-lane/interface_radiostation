@@ -69,7 +69,6 @@ int main() {
             }
 
             if (event.type == sf::Event::MouseButtonPressed) {  //кнопка нажата - значит, будет отправка команды
-                // find_ttyUSB_port();
                 for (int butt = 0; butt < buttons_bottom.size(); butt++)
                     if (buttons_bottom[butt]->isMouseOver(window))
                         transmit_eth(commands[std::to_string(butt)]);

@@ -38,9 +38,11 @@ bool __listener_thread_running = true;
 void ethernetListener(std::vector<std::string> *texts) {
     while (__listener_thread_running) {
         std::string data = receive_eth();
-        std::cout << "[RECEIVE]: {\n" << data << std::endl;
+        std::cout << "[RECEIVE]: {" << data << std::endl;
         message(data, texts);
         std::cout << "}\n\n";
+        std::cout << data << "\n";
+        std::cout << texts << "\n";
     }
 }
 

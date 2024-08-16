@@ -4,7 +4,7 @@
 //#define SERVER_IP "192.168.1.1"  // IP адрес сервера    ноутбук
 #define SERVER_IP "10.10.1.62"  // IP адрес сервера      малинка
 
-#define SERVER_PORT 1234  // Порт сервера        ноутбук и малинка
+#define SERVER_PORT 5678  // Порт сервера        ноутбук и малинка
 
 int transmit_eth(std::string message1) {
     const char *message = message1.c_str();

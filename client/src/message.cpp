@@ -18,7 +18,6 @@ void message(std::string &data, std::vector<std::string> *texts) {
 
     for (auto it = first; it != last; it++) {
         auto token = *it;
-
         if (token.length() > 0) {
             std::cout << "[TOKEN]: `" << token << "`\n";
 
