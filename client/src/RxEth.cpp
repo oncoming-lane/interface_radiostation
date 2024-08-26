@@ -2,16 +2,20 @@
 
 #define PORT 5678  //ноутбук и малинка
 
-std::string receive_eth() {
-    int                sockfd, newsockfd;
-    socklen_t          clilen;
-    char               buffer[256];
-    struct sockaddr_in serv_addr, cli_addr;
-    int                n;
+std::string receive_eth() 
+{
+        int       sockfd, newsockfd;
+        socklen_t clilen;
+    
+        char               buffer[256];
+        struct sockaddr_in serv_addr, cli_addr;
+        int                n;
+    
+        // Создаем сокет
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    // Создаем сокет
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
+    if (sockfd < 0) 
+    {
         std::cerr << "Error opening socket" << std::endl;
         std::exit(1);
     }
@@ -27,7 +31,8 @@ std::string receive_eth() {
     serv_addr.sin_port        = htons(PORT);
 
     // Привязываем сокет к адресу и порту
-    if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+    if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+    {
         std::cerr << "Error on binding" << std::endl;
         std::exit(1);
     }
@@ -38,7 +43,8 @@ std::string receive_eth() {
 
     // Принимаем входящее соединение
     newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
-    if (newsockfd < 0) {
+    if (newsockfd < 0) 
+    {
         std::cerr << "Error on accept" << std::endl;
         std::exit(1);
     }
@@ -46,12 +52,15 @@ std::string receive_eth() {
     // Читаем данные из сокета
     memset(buffer, 0, sizeof(buffer));
     time_t start_time = time(NULL);
-    while ((time(NULL) - start_time) < 0.5) {
+    while ((time(NULL) - start_time) < 0.5) 
+    {
         n = read(newsockfd, buffer, sizeof(buffer) - 1);
-        if (n < 0) {
+        if (n < 0) 
+        {
             if (errno == EAGAIN || errno == EWOULDBLOCK)
                 continue;  // Если нет данных для чтения, продолжаем цикл
-            else {
+            else 
+            {
                 std::cerr << "Error reading from socket" << std::endl;
                 exit(1);
             }

@@ -1,6 +1,7 @@
 #include "buttons.h"
 
-void buttons_create(std::vector<Button *> &buttons) {
+void buttons_create(std::vector<Button *> &buttons) 
+{
     for (int butt = 0; butt < 5; butt++)
         buttons.push_back(new ButtonRect(sf::Vector2f(300 + butt * 240, 500), sf::Vector2f(180, 60), "assets/point.png", ""));
 
