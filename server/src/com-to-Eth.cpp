@@ -1,7 +1,9 @@
 #include "TxRx.h"
 
-int main() {
-    while (1) {
+int main() 
+{
+    while (1) 
+    {
         unsigned char buffer[BUFFER_SIZE];  // Выделение памяти для буфера
         memset(buffer, 0, BUFFER_SIZE);
 

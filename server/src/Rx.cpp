@@ -1,21 +1,26 @@
 #include "TxRx.h"
 #define DEV_DIR "/dev"
 
-char *find_ttyUSB_port() {
+char *find_ttyUSB_port() 
+{
     DIR *dir;
     struct dirent *entry;
     char *port = NULL;
 
     dir = opendir(DEV_DIR);
-    if (!dir) {
+    if (!dir) 
+    {
         perror("Failed to open /dev directory");
         return NULL;
     }
 
-    while ((entry = readdir(dir)) != NULL) {
-        if (strncmp(entry->d_name, "ttyAMA", 6) == 0) {
+    while ((entry = readdir(dir)) != NULL) 
+    {
+        if (strncmp(entry->d_name, "ttyAMA", 6) == 0) 
+        {
             port = (char*)malloc(strlen(DEV_DIR) + strlen(entry->d_name) + 2);
-            if (!port) {
+            if (!port) 
+            {
                 perror("Memory allocation error");
                 closedir(dir);
                 return NULL;
@@ -29,7 +34,8 @@ char *find_ttyUSB_port() {
     return port;
 }
 
-int Rx(unsigned char * buffer) {
+int Rx(unsigned char * buffer) 
+{
     int fd;
     struct termios options;
     
@@ -40,9 +46,8 @@ int Rx(unsigned char * buffer) {
     printf("Found ttyUSB port: %s\n", port);
     // Открываем COM порт для передачи
     fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
-    if (fd == -1) {
+    if (fd == -1) 
         perror("open_port: Unable to open /dev/ttyUSB0 - ");
-    }
 
     // Получаем текущие параметры порта
     tcgetattr(fd, &options);

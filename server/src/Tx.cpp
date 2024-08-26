@@ -39,14 +39,16 @@ int Tx(unsigned char *buffer) {
 
     // Поднимаем сигналы DTR и RTS
     int status;
-    if (ioctl(fd, TIOCMGET, &status) < 0) {
+    if (ioctl(fd, TIOCMGET, &status) < 0) 
+    {
         perror("Error getting status");
         close(fd);
         return 1;
     }
     status |= TIOCM_DTR; // Поднимаем DTR
     status |= TIOCM_RTS; // Поднимаем RTS
-    if (ioctl(fd, TIOCMSET, &status) < 0) {
+    if (ioctl(fd, TIOCMSET, &status) < 0) 
+    {
         perror("Error setting status");
         close(fd);
     }
@@ -56,20 +58,23 @@ int Tx(unsigned char *buffer) {
     // Отправляем данные через COM порт
     int bytes_written = write(fd, buffer, BUFFER_SIZE);
 
-    if (bytes_written < 0) {
+    if (bytes_written < 0) 
+    {
         perror("Error writing to port - ");
         close(fd);
         return 1;
     }
 
      // Опускаем сигналы DTR и RTS
-    if (ioctl(fd, TIOCMGET, &status) < 0) {
+    if (ioctl(fd, TIOCMGET, &status) < 0) 
+    {
         perror("Error getting status");
         close(fd);
         return 1;
     }
     status |= TIOCM_DTR | TIOCM_RTS;
-    if (ioctl(fd, TIOCMSET, &status) < 0) {
+    if (ioctl(fd, TIOCMSET, &status) < 0) 
+    {
         perror("Error getting status");
         close(fd);
         return 1;

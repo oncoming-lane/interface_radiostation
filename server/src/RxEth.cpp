@@ -1,14 +1,16 @@
 #include "TxRx.h"
 #define PORT 1234
 
-void RxEth(unsigned char *buffer) {
+void RxEth(unsigned char *buffer) 
+{
     int                sockfd, newsockfd;
     socklen_t          clilen;
     struct sockaddr_in serv_addr, cli_addr;
 
     // Создаем сокет
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
+    if (sockfd < 0) 
+    {
         perror("Error opening socket");
         exit(1);
     }
@@ -24,7 +26,8 @@ void RxEth(unsigned char *buffer) {
     serv_addr.sin_port        = htons(PORT);
 
     // Привязываем сокет к адресу и порту
-    if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+    if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
+    {
         perror("Error on binding");
         exit(1);
     }
@@ -36,14 +39,16 @@ void RxEth(unsigned char *buffer) {
     // Принимаем входящее соединение
     newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
 
-    if (newsockfd < 0) {
+    if (newsockfd < 0) 
+    {
         perror("Error on accept");
         exit(1);
     }
 
     // Читаем данные из сокета
     int n = read(newsockfd, buffer, BUFFER_SIZE);
-    if (n < 0) {
+    if (n < 0) 
+    {
         perror("Error reading from socket");
         exit(1);
     }

@@ -10,7 +10,8 @@ void TxEth(unsigned char *buffer) {  // TODO Change int to void, or return error
     printf("TX_ETH EXECS NOW\n");
 
     // Создание сокета
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) 
+    {
         perror("Socket creation error");
         exit(EXIT_FAILURE);
     }
@@ -19,7 +20,8 @@ void TxEth(unsigned char *buffer) {  // TODO Change int to void, or return error
     server_addr.sin_family = AF_INET;
     server_addr.sin_port   = htons(SERVER_PORT);
 
-    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) {
+    if (inet_pton(AF_INET, SERVER_IP, &server_addr.sin_addr) <= 0) 
+    {
         perror("Invalid address/ Address not supported");
         exit(EXIT_FAILURE);
     }
