@@ -14,8 +14,7 @@
 #include "TxRxEth.h"
 
 //словарь команд!
-std::map<std::string, std::string> commands = 
-{
+std::map<std::string, std::string> commands = {
     // push up long      push up short     push down
     {"0", "\x05\x83\x02\x57\x7A"},  // 05 83 01 57 C1    05 83 02 57 7A    05 83 00 57 A8
     {"1", "\x05\x89\x02\x57\x24"},  // 05 89 01 57 9F    05 89 02 57 24    05 89 00 57 F6
@@ -35,10 +34,8 @@ std::map<std::string, std::string> commands =
 bool __listener_thread_running = true;
 
 // Функция прослушивания Ethernet соединения
-void ethernetListener(std::vector<std::string> *texts) 
-{
-    while (__listener_thread_running) 
-    {
+void ethernetListener(std::vector<std::string> *texts) {
+    while (__listener_thread_running) {
         std::string data = receive_eth();
         std::cout << "[RECEIVE]: {" << data << std::endl;
         message(data, texts);
@@ -48,8 +45,7 @@ void ethernetListener(std::vector<std::string> *texts)
     }
 }
 
-int main() 
-{
+int main() {
     XInitThreads();
 
     sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project");
@@ -71,8 +67,7 @@ int main()
     font.loadFromFile("assets/troika.otf");
 
     // Основной цикл программы
-    while (window.isOpen()) 
-    {
+    while (window.isOpen()) {
         // Обработка событий окна и кнопок
         sf::Event event;
         while (window.pollEvent(event))  // Обработка событий окна
@@ -80,11 +75,9 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if (event.type == sf::Event::MouseButtonPressed) 
-            {  //кнопка нажата - отправка команды
+            if (event.type == sf::Event::MouseButtonPressed) {  //кнопка нажата - отправка команды
                 for (size_t butt = 0; butt < buttons.size(); butt++)
-                    if (buttons[butt]->isMouseOver(window)) 
-                    {
+                    if (buttons[butt]->isMouseOver(window)) {
                         transmit_eth(commands[std::to_string(butt)]);
                         if (butt == 7)
                             std::cout << "[INFO]: Color change\n";
@@ -97,8 +90,7 @@ int main()
             for (size_t butt = 0; butt < buttons.size(); butt++)
                 buttons[butt]->draw(window);
 
-            for (size_t i = 0; i < texts.size(); i++) 
-            {
+            for (size_t i = 0; i < texts.size(); i++) {
                 sf::Text text(texts[i], font);
                 text.setPosition(450 + i * 100, 300);
                 text.setFillColor(sf::Color::Black);

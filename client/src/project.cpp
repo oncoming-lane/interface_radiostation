@@ -17,8 +17,7 @@
 #include "TxRx.h"
 #include "TxRxEth.h"
 
-int main() 
-{
+int main() {
     sf::RenderWindow window(sf::VideoMode(1900, 700), "Interface Radiostation Project!!!", sf::Style::Default);
 
     // screen
@@ -40,8 +39,7 @@ int main()
     ButtonCircle button_emergency(sf::Vector2f(1750, 150), 60, "assets/emergency.png", "");
 
     //словарь команд!
-    std::map<std::string, std::string> commands = 
-    {
+    std::map<std::string, std::string> commands = {
         // push up long      push up short     push down
         {"0", "\x05\x83\x02\x57\x7A"},  // 05 83 01 57 C1    05 83 02 57 7A    05 83 00 57 A8
         {"1", "\x05\x89\x02\x57\x24"},  // 05 89 01 57 9F    05 89 02 57 24    05 89 00 57 F6
@@ -58,23 +56,19 @@ int main()
         {"right", "\x05\x04\xFF\x57\xCC"}  // 05 04 FF 57 CC
     };
 
-    while (window.isOpen()) 
-    {
+    while (window.isOpen()) {
         sf::Event event;
         receive_eth();
 
         // transmit_eth("START");
 
-        while (window.pollEvent(event)) 
-        {
-            if (event.type == sf::Event::Closed) 
-            {
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
                 window.close();
                 break;
             }
 
-            if (event.type == sf::Event::MouseButtonPressed) 
-            {  //кнопка нажата - значит, будет отправка команды
+            if (event.type == sf::Event::MouseButtonPressed) {  //кнопка нажата - значит, будет отправка команды
                 for (int butt = 0; butt < buttons_bottom.size(); butt++)
                     if (buttons_bottom[butt]->isMouseOver(window))
                         transmit_eth(commands[std::to_string(butt)]);
