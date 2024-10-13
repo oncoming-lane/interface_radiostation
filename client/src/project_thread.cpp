@@ -21,11 +21,11 @@ bool __listener_thread_running = true;
 void ethernetListener(std::vector<std::string> *texts) {
     while (__listener_thread_running) {
         std::string data = receive_eth();
+
         std::cout << "[RECEIVE]: {" << data << std::endl;
         message(data, texts);
-        std::cout << "}\n\n";
-        std::cout << data << "\n";
-        std::cout << texts << "\n";
+
+        std::cout << "}\n\n[DATA]: `" << data << "`\n[TEXTS]: `" << texts << "`\n";
     }
 }
 
@@ -35,8 +35,9 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(resolution_x, resolution_y), "Interface Radiostation Project");
     window.setActive(false);
 
-    Screen_main main_Screen(sf::Vector2f(left_border + button_offset, bottom_border),
-                            sf::Vector2f(main_screen_width, main_screen_height), "assets/white.png", "Main Screen");
+    Screen_main main_screen(
+        sf::Vector2f(left_border + button_offset, bottom_border),  // TODO Make vector and use it in texts positioning
+        sf::Vector2f(main_screen_width, main_screen_height), "assets/white.png", "Main Screen");
 
     std::vector<Button *> buttons;
     buttons_create(buttons);
@@ -55,23 +56,41 @@ int main() {
                 window.close();
 
             if (event.type == sf::Event::MouseButtonPressed) {  // Button is pressed -> Sending command
-                for (const auto &button : buttons)
-                    if (button->isMouseOver(window))
+                for (const auto &button : buttons) {
+                    button->change_color(sf::Color::White);
+
+                    if (button->isMouseOver(window)) {  // FIXME Get coordinartes from event not from window directly
+                        button->change_color(sf::Color::Green);
                         transmit_eth(button->m_command);
+                    }
+                }
             }
 
             window.clear(sf::Color::Black);
-            main_Screen.draw(window);
+
+            if (texts.size() > 0)
+                main_screen.change_text("Message: " + texts[0]);
+
+            main_screen.draw(window);
 
             for (const auto &button : buttons)
                 button->draw(window);
 
-            for (size_t i = 0; i < texts.size(); i++) {
-                sf::Text text(texts[i], font);
-                text.setPosition(450 + i * 100, 300);
-                text.setFillColor(sf::Color::Black);
-                window.draw(text);
+            int x_offset = left_border + button_offset;
+            int y_offset = bottom_border + text_offset;
+
+            for (size_t text_number = 1; text_number < texts.size(); text_number++) {
+                std::string screen_text_string = "Button " + std::to_string(text_number) + ": " + texts[text_number];
+
+                sf::Text screen_text(screen_text_string, font);
+                screen_text.setPosition(x_offset, y_offset);
+                screen_text.setFillColor(sf::Color::Black);
+
+                window.draw(screen_text);
+
+                y_offset += text_offset;
             }
+
             window.display();
         }
     }

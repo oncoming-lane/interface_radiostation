@@ -12,3 +12,7 @@ const int bottom_border = 100;
 const int button_offset    = 150;
 const int button_radius    = 60;
 const int button_text_size = button_radius / 2;
+
+const int text_offset = 20;
+
+const int number_of_signal_buttons = 5;

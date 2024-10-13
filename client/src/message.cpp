@@ -1,4 +1,5 @@
 #include <regex>
+#include <string_view>
 
 #include "message.h"
 #include "screen.h"
@@ -12,16 +13,14 @@ void message(std::string &data, std::vector<std::string> *texts) {
             ascii_data += symbol;
 
     std::cout << "ASCII Data: `" << ascii_data << "`\n";
+    std::string_view input = static_cast<std::string_view>(ascii_data);
 
-    std::regex                 re("[ ^\"9]");
-    std::sregex_token_iterator first {ascii_data.begin(), ascii_data.end(), re, -1}, last;
-
-    for (auto it = first; it != last; it++) {
-        auto token = *it;
-        if (token.length() > 0) {
-            std::cout << "[TOKEN]: `" << token << "`\n";
-
-            texts->push_back(*it);
-        }
+    char delim = '^';
+    for (auto found = input.find(delim); found != std::string_view::npos; found = input.find(delim)) {
+        (*texts).emplace_back(input, 0, found);
+        input.remove_prefix(found + 1);
     }
+
+    if (not input.empty())
+        (*texts).emplace_back(input);
 }

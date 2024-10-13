@@ -28,7 +28,7 @@ public:
 
     virtual bool isMouseOver(sf::RenderWindow &window) = 0;
 
-    virtual void change_color(int color_num) = 0;
+    virtual void change_color(const sf::Color &color) = 0;
 
 protected:
     sf::Vector2f m_position;
@@ -38,7 +38,8 @@ protected:
     std::string  m_text;
 };
 
-class ButtonCircle : public Button {
+class ButtonCircle
+        : public Button {  // FIXME Make ButtonCircle Base class and remove virtual functions. We are using only circle buttons
 public:
     ButtonCircle(sf::Vector2f position, float radius, std::string texturePath, std::string command, std::string text):
             Button(position, texturePath, command, text), m_radius(radius) {
@@ -58,46 +59,15 @@ public:
         sf::Vector2f mousePos = sf::Vector2f(sf::Mouse::getPosition(window));
         float        distance = std::sqrt(std::pow(mousePos.x - m_position.x, 2) + std::pow(mousePos.y - m_position.y, 2));
 
-        if (distance <= m_radius) {
-            change_color(2);
-
+        if (distance <= m_radius)
             return true;
-        }
 
         return false;
     }
 
-    void change_color(int color_num) {
-        switch (color_num) {
-            case 1: {
-                m_circle.setFillColor(sf::Color::Green);
-                break;
-            }
-            case 2: {
-                m_circle.setFillColor(sf::Color::Red);
-                break;
-            }
-            case 3: {
-                m_circle.setFillColor(sf::Color::Blue);
-                break;
-            }
-            case 4: {
-                m_circle.setFillColor(sf::Color::Magenta);
-                break;
-            }
-            case 5: {
-                m_circle.setFillColor(sf::Color::Cyan);
-                break;
-            }
-            case 6: {
-                m_circle.setFillColor(sf::Color::Yellow);
-                break;
-            }
-            default: {
-                m_circle.setFillColor(sf::Color::White);
-            }
-        }
-    }
+    void change_color(const sf::Color &color) { m_circle.setFillColor(color); }
+
+    int get_position_x() { return m_position.x; }
 
 private:
     sf::CircleShape m_circle;
